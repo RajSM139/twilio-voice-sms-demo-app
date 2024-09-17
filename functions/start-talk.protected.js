@@ -12,6 +12,11 @@ exports.handler = async (context, event, callback) => {
   const code = event.TalkCode;
   const talk = data.getTalkByCode(code);
   const speakerCallSids = [];
+  console.log("Calling speakers...");
+  let domainName = context.DOMAIN_NAME;
+  if (domainName.startsWith("localhost")) {
+    domainName = "<YOUR NGROK URL>";
+  }
   for (const speaker of talk.speakers) {
     const participant = await client
       .conferences(talk.code)
@@ -21,6 +26,8 @@ exports.handler = async (context, event, callback) => {
         label: speaker.name,
         beep: true,
         startConferenceOnEnter: true,
+        conferenceStatusCallback: `https://${domainName}/status-handler`,
+        conferenceStatusCallbackEvents: ["leave"],
       });
 
     speakerCallSids.push(participant.callSid);

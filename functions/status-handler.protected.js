@@ -1,11 +1,6 @@
 const assets = Runtime.getAssets();
 const { Data } = require(assets["/data.js"].path);
 
-/*
-To test it, use URL:
-http://localhost:3000/status-handler
-*/
-
 exports.handler = async (context, event, callback) => {
   console.log(`Status Callback Event ${event.StatusCallbackEvent}`);
   try {

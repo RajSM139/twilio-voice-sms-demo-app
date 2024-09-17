@@ -1,0 +1,99 @@
+{
+  "info": {
+    "_postman_id": "2b92387c-93a1-4a63-9ad2-370da97f85b2",
+    "name": "Twilio Demo App",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "3628445"
+  },
+  "item": [
+    {
+      "name": "[PROTECTED] Start Talk",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const authToken = pm.environment.get('TWILIO_AUTH_TOKEN');",
+              "",
+              "function interpolate (value) {",
+              "    return value.replace(/{{([^}]+)}}/g, function (match, $1) {",
+              "        return pm.variables.get($1);",
+              "    });",
+              "}",
+              "",
+              "function crypto(authToken, data) {",
+              "    let signature = CryptoJS.HmacSHA1(CryptoJS.enc.Utf8.parse(data), authToken);",
+              "    let base64 = CryptoJS.enc.Base64.stringify(signature);",
+              "    console.log(base64);",
+              "    return base64;",
+              "}",
+              "",
+              "function getSignature(authToken, url, params) {",
+              "    let data = Object.keys(params).sort().reduce((acc, key) => acc + key + interpolate(params[key]), interpolate(url));",
+              "    return crypto(authToken, data);",
+              "}",
+              "",
+              "console.log(request);",
+              "pm.environment.set('TWILIO_SIGNATURE', getSignature(authToken, request.url, request.data));"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-Twilio-Signature",
+            "value": "{{TWILIO_SIGNATURE}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "AccountSid",
+              "value": "{{TWILIO_ACCOUNT_SID}}",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "<YOUR DEPLOYED BASE URL>/start-talk?TalkCode=demo",
+          "protocol": "https",
+          "host": ["<YOUR DEPLOYED BASE URL>", "twil", "io"],
+          "path": ["start-talk"],
+          "query": [
+            {
+              "key": "TalkCode",
+              "value": "demo"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Incoming Message",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "<YOUR DEPLOYED BASE URL>/incoming-message?Body=join+demo",
+          "protocol": "https",
+          "host": ["<YOUR DEPLOYED BASE URL>", "twil", "io"],
+          "path": ["incoming-message"],
+          "query": [
+            {
+              "key": "Body",
+              "value": "join+demo"
+            }
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

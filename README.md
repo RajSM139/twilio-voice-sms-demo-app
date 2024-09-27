@@ -1,4 +1,4 @@
-# Demo Twilio Application
+# Demo Application on Twilio Serverless with Voice and SMS
 This is a Demo Application built based on the Twilio's Learning Path on LinkedIn for **Twilio Programmable Messaging and Voice Professional Certificate** 
 
 Learning Path Link: [LinkedIn Learning](https://www.linkedin.com/learning/paths/twilio-programmable-messaging-and-voice-professional-certificate)
